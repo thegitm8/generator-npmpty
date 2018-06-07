@@ -1,0 +1,31 @@
+{
+  "name": "<%= name %>",
+  "version": "0.0.1",
+  "license": "<%= license %>",
+  "author": "<%= author %> <<%= githubEmail %>>",
+  "description": "<%= description %>",
+  "keywords": [
+    "npmpty"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "<%= githubUserName %>/<%= name %>"
+  },
+  "homepage": "https://github.com/<%= githubUserName %>/<%= name %>#readme",
+  "bugs": {
+    "url": "https://github.com/<%= githubUserName %>/<%= name %>/issues"
+  },
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": "^<%= engineNodeVersion %>",
+    "npm": "^<%= engineNpmVersion %>"
+  },
+  "scripts": {
+    "test": "mocha test.js",
+    "lint": "eslint src/**",
+    "build": "cp -r src dist"
+  }
+}

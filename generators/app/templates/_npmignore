@@ -1,0 +1,20 @@
+# non-production dirs
+/example
+/test
+#/src
+/doc
+/coverage
+
+# different working dirs/files
+/.notes
+
+.eslintrc
+.gitignore
+.travis.yml
+.babelrc
+master.pid
+npmpty-*.tgz
+appveyor.yml
+# documentation
+CONTRIBUTING.md
+README.md

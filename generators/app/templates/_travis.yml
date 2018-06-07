@@ -1,0 +1,74 @@
+# CI/CD pipeline for npm packages
+# by Doc <mail@antlike.tech>
+
+language: node_js
+node_js: lts/*
+
+notifications:
+  email: false
+
+# global caching
+cache:
+  directories:
+    - node_modules
+    - "$HOME/.nvmrc"
+    - "$HOME/.npm"
+
+# global install
+install:
+  - npm install
+  - npm run build
+
+# controlling stages
+stages:
+  - test
+  - name: dependencies
+    if: branch = master
+  - name: deploy
+    if: branch = master
+
+jobs:
+  include:
+    # Linting
+    - stage: test
+      env: currently=linting
+      install:
+        - npm i -g eslint eslint-config-airbnb-base eslint-plugin-import
+      script: npm run lint
+
+    - stage: test
+      env: currently=coverage
+      install:
+        - npm i -g nyc coveralls
+      script: nyc npm test && nyc report --reporter=text-lcov | coveralls
+
+    # Unit tests
+    - stage: test
+      node_js: 8
+      env: currently=unit-testing
+      script: npm test
+
+    - stage: test
+      node_js: 6
+      env: currently=unit-testing
+      script: npm test
+
+    # Depenedency checking
+    - stage: dependencies
+      env: currently=dependency-vuln-checking
+      script:
+        - npm i -g snyk
+        - snyk test
+
+    - stage: dependencies
+      env: currently=dependency-update-checking
+      script: npx npm-check -ps
+
+    # Deploy
+    - stage: deploy
+      env: currently=deploying
+      script: npm i -g semantic-release @semantic-release/changelog @semantic-release/git
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script: semantic-release
